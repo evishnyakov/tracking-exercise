@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Tracking exercise</title>
+  </head>
+  <body>
+  	<script type="text/javascript" src="bundle.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDipJqWY3JWL1ybx67DzVkdyAT3uhPt5Bk&sensor=true"></script>
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-1 sidenav">
+      <h4>Tracking exercise</h4>
+      <ul class="nav nav-pills nav-stacked" id="menu">
+        <li><a href="#index">Main</a></li>
+        <li><a href="#waypoints">Waypoints</a></li>
+        <li><a href="#tours">Tours</a></li>
+      </ul><br>
+    </div>
+
+    <div class="col-sm-11">
+      <div id="app"></div>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid">
+</footer>
+
+  <script type="text/template" name="create-tour">
+    <h2>Create tour</h2>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-1" for="title">Title:</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="title" placeholder="Enter title">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-12" for="title">Waypoints:</label>
+        <div class="col-sm-6">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Recipient</th>
+                <th>Address</th>
+              </tr>
+            </thead>
+            <tbody class="waypoints-list"></tbody>
+          </table>
+        </div>
+        <div class="col-sm-6">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Recipient</th>
+                <th>Address</th>
+                <th>Due date</th>
+              </tr>
+            </thead>
+            <tbody class="tour-waypoints-list"></tbody>
+          </table>          
+        </div>
+
+      </div>      
+      <div class="form-group"> 
+        <div class="col-sm-10">
+          <button type="button" class="btn btn-primary" id="submit">Submit</button>
+          <button type="button" class="btn btn-default" id="cancel">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </script>
+
+  <script type="text/template" name="tours">
+      <h2>Tours</h2>
+      <a href="#tours-new" class="btn btn-info pull-right" role="button">Create tour</a>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody class="tours-list">
+        </tbody>
+      </table>
+  </script>
+
+  <script type="text/template" name="tour">
+      <td><%= title %></td>
+      <td>
+        <button class="btn btn-success btn-xs" id="open">
+          <span class="glyphicon glyphicon-eye-open"></span>
+        </button>
+      </td>
+      <td>
+        <button class="btn btn-primary btn-xs" id="edit">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+      </td>      
+      <td>
+        <button class="btn btn-danger btn-xs" id="delete">
+          <span class="glyphicon glyphicon-trash"></span>
+        </button>
+      </td>
+  </script> 
+
+
+	<script type="text/template" name="index">
+    <div class="container">
+      <h2>Driver info</h2>
+      <table class="table">
+        <thead></thead>
+        <tbody>
+          <tr>
+            <td>First name</td>
+            <td><%= firstName %></td>
+          </tr>
+          <tr>
+            <td>Last name</td>
+            <td><%= lastName %></td>
+          </tr>
+          <tr>
+            <td>Phone</td>
+            <td><%= phone %></td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td><%= email %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+	</script>
+
+  <script type="text/template" name="waypoints">
+      <h2>Waypoints</h2>
+      <a href="#waypoints-new" class="btn btn-info pull-right" role="button">Create waypoint</a>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Recipient</th>
+            <th>Address</th>
+            <th>Type</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody class="waypoints-list">
+        </tbody>
+      </table>
+  </script>
+
+  <script type="text/template" name="waypoint">
+      <td><%= recipient %></td>
+      <td><%= address %></td>
+      <td><%= type %></td>
+      <td>
+        <button class="btn btn-primary btn-xs" id="edit">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+      </td>      
+      <td>
+        <button class="btn btn-danger btn-xs" id="delete">
+          <span class="glyphicon glyphicon-trash"></span>
+        </button>
+      </td>
+  </script>  
+  
+  <script type="text/template" name="create-waypoint">
+    <h2>Create waypoint</h2>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="recipient">Recipient:</label>
+        <div class="col-sm-10">
+          <input type="recipient" class="form-control" id="recipient" placeholder="Enter recipient">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="type">Select type:</label>
+        <div class="col-sm-10">
+          <select class="form-control" id="type">
+            <option value="PICKUP">Pick up</option>
+            <option value="DROPOFF">Drop off</option>
+          </select>
+        </div>
+      </div>      
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="address">Address:</label>
+        <div class="col-sm-10">
+          <input type="address" class="form-control" id="address" placeholder="Enter address">
+        </div>
+      </div>      
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="location">Location:</label>
+        <div class="col-sm-10" id="map-placeholer">
+          <div id="map" style="width:100%;height:400px;"></div>
+        </div>
+      </div>
+      <div class="form-group"> 
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="button" class="btn btn-primary" id="submit">Submit</button>
+          <button type="button" class="btn btn-default" id="cancel">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </script>
+
+  <!-- Modals -->
+  <div class="modal fade" id="askRemoveWaypoint" role="dialog">
+    <div class="modal-dialog">    
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Remove waypoint</h4>
+        </div>
+        <div class="modal-body">
+          <p>Do you really want to remove a waypoint?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" id="ok">Ok</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="modal fade" id="askRemoveTour" role="dialog">
+    <div class="modal-dialog">    
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Remove tour</h4>
+        </div>
+        <div class="modal-body">
+          <p>Do you really want to remove a tour?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" id="ok">Ok</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  </body>
+</html>

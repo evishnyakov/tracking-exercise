@@ -1,0 +1,6 @@
+task buildJar(dependsOn: ':backend:build') << {
+	copy {
+		from './backend/build/libs'
+		into './build'
+	}
+}
